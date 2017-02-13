@@ -7,7 +7,8 @@
 
 (deftest add-player-test
   (testing "Adding a player"
-    (is (= {test-player-name 0} (add-player {} test-player-name)))))
+    (is (= {test-player-name 0} (add-player {} test-player-name))
+        "The player should have been added to the map")))
 
 (deftest add-score-test
   (testing "Adding score to a player"
@@ -16,5 +17,6 @@
         {test-player-name 1} 
         (add-score 
           {test-player-name 0} 
-          test-player-name)))))
+          test-player-name))
+      "The score should have increased")))
 
