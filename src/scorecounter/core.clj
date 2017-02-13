@@ -32,11 +32,10 @@
 (defn -main
   "The game starts here"
   [& args]
-  (-> {}
-      setup
-      game
-      print-scores))
-
-
-
-
+  (let [players (atom {})]
+    (swap! players setup)
+    (println "Moving to game mode")
+    (swap! players game)
+    (println "Game over")
+    (print-scores @players)))
+        
