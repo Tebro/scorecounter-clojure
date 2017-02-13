@@ -12,7 +12,7 @@
   (try
     (dosync
       (ref-set players (assoc @players name (inc (@players name)))))
-    (catch Exception e (println "No such player"))))
+    (catch NullPointerException e (println "No such player"))))
 
 (defn print-scores []
   (doseq [x @players] (println (x 0) ":" (x 1))))
