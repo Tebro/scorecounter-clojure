@@ -2,17 +2,17 @@
   (:gen-class))
 
 
-(def players (ref {}))
+(defonce players (ref {}))
 
 (defn add-player [name]
   (dosync
-    (ref-set players (conj @players { name 0}))))
+    (alter players assoc name 0)))
 
 (defn add-score [name]
-  (try
+  (if (contains? @players name)
     (dosync
-      (ref-set players (assoc @players name (inc (@players name)))))
-    (catch NullPointerException e (println "No such player"))))
+      (ref-set players (update-in @players [name] inc)))
+    (println "No such player")))
 
 (defn print-scores []
   (doseq [x @players] (println (x 0) ":" (x 1))))
@@ -21,7 +21,7 @@
 (defn setup []
     (println "Enter name: (empty to move on)")
     (let [in (read-line)]
-      (if (< (count in) 1)
+      (if (empty? in)
         (println "Moving to game mode")
         (do 
           (add-player in)
@@ -31,7 +31,7 @@
     (print-scores)
     (println "Enter name to add score (empty to end)")
     (let [in (read-line)]
-      (if (< (count in) 1)
+      (if (empty? in)
         (println "Game Over")
         (do
           (add-score in)
