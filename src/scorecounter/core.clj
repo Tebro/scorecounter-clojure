@@ -19,17 +19,15 @@
 
 
 (defn setup []
-  (loop []
     (println "Enter name: (empty to move on)")
     (let [in (read-line)]
       (if (< (count in) 1)
         (println "Moving to game mode")
         (do 
           (add-player in)
-          (recur))))))
+          (recur)))))
 
 (defn game []
-  (loop []
     (print-scores)
     (println "Enter name to add score (empty to end)")
     (let [in (read-line)]
@@ -37,7 +35,7 @@
         (println "Game Over")
         (do
           (add-score in)
-          (recur))))))
+          (recur)))))
 
 (defn -main
   "The game starts here"
