@@ -2,47 +2,40 @@
   (:gen-class))
 
 
-(defonce players (ref {}))
+(defn add-player [players playerName]
+    (assoc players playerName 0))
 
-(defn add-player [name]
-  (dosync
-    (alter players assoc name 0)))
+(defn add-score [players name]
+  (if (contains? players name)
+      (update-in players [name] inc)
+      (do (println "No such player") players)))
 
-(defn add-score [name]
-  (if (contains? @players name)
-    (dosync
-      (ref-set players (update-in @players [name] inc)))
-    (println "No such player")))
-
-(defn print-scores []
-  (doseq [x @players] (println (x 0) ":" (x 1))))
+(defn print-scores [players]
+  (doseq [x players] (println (x 0) ":" (x 1))))
 
 
-(defn setup []
+(defn setup [players]
     (println "Enter name: (empty to move on)")
     (let [in (read-line)]
       (if (empty? in)
-        (println "Moving to game mode")
-        (do 
-          (add-player in)
-          (recur)))))
+        players
+        (recur (add-player players in)))))
 
-(defn game []
-    (print-scores)
+(defn game [players]
+    (print-scores players)
     (println "Enter name to add score (empty to end)")
     (let [in (read-line)]
       (if (empty? in)
-        (println "Game Over")
-        (do
-          (add-score in)
-          (recur)))))
+        players
+        (recur (add-score players in)))))
 
 (defn -main
   "The game starts here"
   [& args]
-  (setup)
-  (game)
-  (print-scores))
+  (-> {}
+      setup
+      game
+      print-scores))
 
 
 
